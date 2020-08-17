@@ -2,7 +2,7 @@
 Udacity, Sensor Fusion, Project of Radar Target Generation and Detection
 
 ## Project Layout:
-<img src="./ProjectLayout.jfif" width="700" />
+<img src=".Results/ProjectLayout.jfif" width="700" />
 
 * Refer to `radar_target_generation_and_detection_n.m`
 
