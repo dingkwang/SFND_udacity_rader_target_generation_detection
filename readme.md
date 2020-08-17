@@ -159,9 +159,9 @@ Td = 8;
 Gr = 4;
 Gd = 4;
 ```
-* Offset the threshold by SNR value in dB
+* Offset the threshold by SNR value in dB, adjust the offset to 1.1 to get a good result. The offset is to adjust the position of threshold according to the noise level. The offset is usually a positive value, which can decrease the change of false alarm. 
 ```
-offset = 1.6;
+offset = 1.1;
 ```
 * Create a vector to store noise_level for each iteration on training cells design a loop such that it slides the CUT across range doppler map by giving margins at the edges for Training and Guard Cells.
 * For every iteration sum the signal level within all the training cells. 
@@ -203,18 +203,33 @@ for i = Tr+Gr+1:(Nr/2)-(Gr+Tr)
     end
 end
 ```
+* UPDATE: I found my original code has a bug. The RDM is filtered to 0/1 immediately after one signal is processed. It should not be the case because it will affect the following signals. 
+* In the updated code, I used the 2D convolution method, which eliminate the multiple for loop and it will not affect the orignal RDM. 
+* The offset is also adjusted accordingly because of the bug fixed. 
+```
+
+RDM_org = RDM;
+RDM_pow = db2pow(RDM);
+num_traincell = (2*(Td + Gd + 1)*2*(Tr+Gr+1)-(Gr*Gd)-1);
+
+mask = ones(2*(Tr + Gr)+1, 2*(Td + Gd)+1)/num_traincell;
+mask(Tr+1:end-Tr,Td+1:end-Td) = 0; 
+sum_train = conv2(RDM_pow, mask, 'same');
+threshold_cov = pow2db(sum_train)+offset;
+
+RDM_comp = RDM_org > threshold_cov;
+```
 * The process above will generate a thresholded block, which is smaller than the Range Doppler Map as the CUT cannot be located at the edges of matrix. 
 * Hence,few cells will not be thresholded. 
 * To keep the map size same set those values to 0. 
 ```
-RDM(union(1:(Tr+Gr),end-(Tr+Gr-1):end),:) = 0;  % Rows
-RDM(:,union(1:(Td+Gd),end-(Td+Gd-1):end)) = 0;  % Columns 
+RDM_comp(union(1:(Tr+Gr),end-(Tr+Gr-1):end),:) = 0;  % Rows
+RDM_comp(:,union(1:(Td+Gd),end-(Td+Gd-1):end)) = 0;  % Columns 
 ```
 * Display the CFAR output using the Surf function like we did for Range
 * Doppler Response output.
 ```
-figure('Name','CA-CFAR Filtered RDM')
-surf(doppler_axis,range_axis,RDM);
+figure,surf(doppler_axis,range_axis,double(RDM_comp));
 colorbar;
 ```
 * Simulation Result
