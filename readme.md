@@ -8,9 +8,9 @@ Udacity, Sensor Fusion, Project of Radar Target Generation and Detection
 
 ---
 ## UPDATE: 
-*I found my original code has a bug. The RDM is filtered to 0/1 immediately after one signal is processed. It should not be the case because it will affect the following signals.
-*In the updated code, I used the 2D convolution method, which eliminate the multiple for loop and it will not affect the orignal RDM.
-*The offset is also adjusted accordingly because of the bug fixed.
+* I found my original code has a bug. The RDM is filtered to 0/1 immediately after one signal is processed. It should not be the case because it will affect the following signals.
+* In the updated code, I used the 2D convolution method, which eliminate the multiple for loop and it will not affect the orignal RDM.
+* The offset is also adjusted accordingly because of the bug fixed.
 
 #### 1. Radar Specifications 
 * Frequency of operation = 77GHz
