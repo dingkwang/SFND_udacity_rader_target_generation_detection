@@ -115,7 +115,7 @@ plot(single_side_sig_fft1);
 axis ([0 200 0 1]);
 ```
 * Simulation Result
-<img src="Results/Fig1_Range_from_First_FFT.bmp" width="700" />
+<img src="Results/Fig1_Range_from_First_FFT.jpg" width="700" />
 
 #### 6. Range Doppler Response
 * The 2D FFT implementation is already provided here. 
